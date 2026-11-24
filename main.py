@@ -6,9 +6,17 @@ with no network and no input beyond the fixed line below.
 """
 import os
 
+# Gate for this bounty: entry.txt must be UTF-8 text of 1 to 200 characters,
+# not only white space. Refuse to write an entry that would fail the gate.
+MAX_CHARS = 200
+
 LINE = 'I told my smart fridge about my diet, and now it just sighs and dims its light when I open it at midnight.'
 
 def main():
+    if not (1 <= len(LINE) <= MAX_CHARS) or not LINE.strip():
+        raise SystemExit(f"entry violates the gate: {len(LINE)} characters")
+    if "\n" in LINE:
+        raise SystemExit("entry must be a single line")
     out_dir = os.environ.get("MAKEFUN_OUTPUT_DIR", "/output")
     os.makedirs(out_dir, exist_ok=True)
     with open(os.path.join(out_dir, "entry.txt"), "w", encoding="utf-8") as f:
